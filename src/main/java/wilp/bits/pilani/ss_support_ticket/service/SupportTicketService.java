@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class SupportTicketService {
+    public class SupportTicketService {
 
     @Autowired
     private SupportTicketRepository repository;
@@ -20,6 +20,10 @@ public class SupportTicketService {
         ticket.setUpdatedAt(LocalDateTime.now());
         ticket.setStatus(Status.OPEN);
         return repository.save(ticket);
+    }
+
+    public List<SupportTicket> getAllTickets() {
+        return repository.findAll();
     }
 
     public List<SupportTicket> getTicketsByUserId(Long userId) {
@@ -35,5 +39,13 @@ public class SupportTicketService {
             ticket.setUpdatedAt(LocalDateTime.now());
             return repository.save(ticket);
         }).orElseThrow(() -> new RuntimeException("Ticket not found"));
+    }
+
+    public void deleteTicket(Long ticketId) {
+        if (repository.existsById(ticketId)) {
+            repository.deleteById(ticketId);
+        } else {
+            throw new RuntimeException("Ticket with ID " + ticketId + " not found.");
+        }
     }
 }
